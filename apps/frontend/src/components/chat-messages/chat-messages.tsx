@@ -74,7 +74,7 @@ const ChatMessagesContent = memo(({ showThinkingLoader }: { showThinkingLoader: 
 	return (
 		<>
 			<div
-				className='flex flex-col gap-8'
+				className='flex flex-col gap-8 max-md:gap-0'
 				style={{ '--extra-components-height': `${extraComponentsHeight}px` } as React.CSSProperties}
 			>
 				{messageGroups.length === 0 ? (
