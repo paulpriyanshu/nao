@@ -226,6 +226,7 @@ class TeamsService {
 				source: 'teams',
 			});
 			ctx.chatId = existingChat.id;
+			ctx.isNewChat = false;
 		} else {
 			const title = createChatTitle({ text });
 			const [createdChat] = await chatQueries.createChat(
@@ -233,6 +234,7 @@ class TeamsService {
 				{ text, source: 'teams' },
 			);
 			ctx.chatId = createdChat.id;
+			ctx.isNewChat = true;
 		}
 	}
 
@@ -241,6 +243,7 @@ class TeamsService {
 			{ ...chat, userId: ctx.user!.id, projectId: this._projectId },
 			this._modelSelection,
 		);
+		ctx.modelId = agent.getModelId();
 		const stream = agent.stream(chat.messages, { provider: 'teams' });
 		const stopCard = await ctx.thread.post(createStopButtonCard());
 
