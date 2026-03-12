@@ -1,7 +1,7 @@
 name: PR Preview Deployment
 
 on:
-    pull_request:
+    pull_request_target:
         types: [opened, synchronize, reopened, closed]
 
 permissions:
@@ -21,10 +21,14 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
+              with:
+                  ref: ${{ github.event.pull_request.head.sha }}
 
             - name: Get short SHA
               id: sha
-              run: echo "short_sha=${GITHUB_SHA::7}" >> $GITHUB_OUTPUT
+              run: |
+                  PR_SHA="${{ github.event.pull_request.head.sha }}"
+                  echo "short_sha=${PR_SHA::7}" >> $GITHUB_OUTPUT
 
             - name: Set preview name
               id: preview
