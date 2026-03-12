@@ -26,6 +26,7 @@ import {
 	EXCLUDED_TOOLS,
 } from '../utils/messaging-provider';
 import { agentService, ModelSelection } from './agent';
+import { posthog, PostHogEvent } from './posthog';
 
 const UPDATE_INTERVAL_MS = 200;
 
@@ -252,6 +253,15 @@ class TeamsService {
 		this._lastCompletionCard.set(ctx.thread.id, { card, chatUrl });
 
 		ctx.assistantMessage = state.lastMessage;
+
+		posthog.capture(ctx.user!.id, PostHogEvent.MessageSent, {
+			project_id: this._projectId,
+			chat_id: ctx.chatId,
+			model_id: ctx.modelId,
+			is_new_chat: ctx.isNewChat,
+			source: 'teams',
+			domain_host: new URL(this._redirectUrl).host,
+		});
 	}
 
 	private async _readStreamAndUpdateMessage(

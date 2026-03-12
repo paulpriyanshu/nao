@@ -26,7 +26,7 @@ export const agentRoutes = async (app: App) => {
 			model_id: result.modelId,
 			is_new_chat: result.isNewChat,
 			source: 'web',
-			domain_host: headers.host,
+			domain_host: headers['x-forwarded-host'] || headers.host,
 		});
 
 		let stream = result.stream;

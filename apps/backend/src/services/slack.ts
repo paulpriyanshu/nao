@@ -281,6 +281,7 @@ class SlackService {
 			model_id: ctx.modelId,
 			is_new_chat: ctx.isNewChat,
 			source: 'slack',
+			domain_host: new URL(this._redirectUrl).host,
 		});
 	}
 
