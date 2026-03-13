@@ -31,12 +31,9 @@ export const useIdentifyPostHog = () => {
 			posthog.identify(user.id, {
 				email_domain: user.email.split('@').at(1),
 				name: user.name,
-				project_id: project?.id,
+				project_id: project.id,
 			});
-
-			if (project?.id) {
-				posthog.register({ project_id: project.id });
-			}
+			posthog.register({ project_id: project.id });
 		} else if (wasConnectedRef.current) {
 			wasConnectedRef.current = false;
 			posthog.reset();
