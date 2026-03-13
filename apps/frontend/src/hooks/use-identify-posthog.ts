@@ -24,6 +24,9 @@ export const useIdentifyPostHog = () => {
 
 		const user = session.data?.user;
 		if (user) {
+			if (!project?.id) {
+				return;
+			}
 			wasConnectedRef.current = true;
 			posthog.identify(user.id, {
 				email_domain: user.email.split('@').at(1),
