@@ -169,7 +169,6 @@ class SlackService {
 			convMessage: null,
 			blocks: [],
 			textBlockIndex: -1,
-			assistantMessage: null,
 			isNewChat: false,
 			modelId: undefined,
 			timezone: undefined,
@@ -309,8 +308,6 @@ class SlackService {
 			toolGroupBlockIndex: -1,
 		};
 
-		let lastMessage: UIMessage | null = null;
-
 		for await (const uiMessage of readUIMessageStream<UIMessage>({ stream })) {
 			const part = uiMessage.parts[uiMessage.parts.length - 1];
 			if (!part) {
@@ -331,10 +328,8 @@ class SlackService {
 			} else if (part.type === 'tool-display_chart') {
 				await this._handleChartPart(part, state, ctx);
 			}
-			lastMessage = uiMessage;
 		}
 
-		ctx.assistantMessage = lastMessage;
 		await this._sendFinalText(ctx);
 		return state;
 	}

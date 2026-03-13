@@ -137,7 +137,6 @@ class TeamsService {
 			convMessage: null,
 			blocks: [],
 			textBlockIndex: -1,
-			assistantMessage: null,
 			isNewChat: false,
 			modelId: undefined,
 			timezone: undefined,
@@ -244,18 +243,13 @@ class TeamsService {
 			this._modelSelection,
 		);
 		ctx.modelId = agent.getModelId();
-		const stream = agent.stream(chat.messages, { provider: 'teams' });
 		const stopCard = await ctx.thread.post(createStopButtonCard());
-
-		const state = await this._readStreamAndUpdateMessage(stream, ctx);
 
 		await stopCard.delete();
 		await this._lastCompletionCard.get(ctx.thread.id)?.card.delete();
 		const chatUrl = new URL(ctx.chatId, this._redirectUrl).toString();
 		const card = await ctx.thread.post(createCompletionCard(chatUrl));
 		this._lastCompletionCard.set(ctx.thread.id, { card, chatUrl });
-
-		ctx.assistantMessage = state.lastMessage;
 
 		posthog.capture(ctx.user!.id, PostHogEvent.MessageSent, {
 			project_id: this._projectId,
